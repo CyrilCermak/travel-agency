@@ -1,0 +1,24 @@
+package cz.ucl.fa.ui;
+
+
+
+public class CustomerListDialog extends javax.swing.JDialog {
+
+
+    public CustomerListDialog(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        setLocationRelativeTo(parent);
+        initComponents();
+    }
+
+    private void initComponents() {
+    	setTitle("Customer List");
+    	setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+
+        pack();
+    }
+
+
+
+}

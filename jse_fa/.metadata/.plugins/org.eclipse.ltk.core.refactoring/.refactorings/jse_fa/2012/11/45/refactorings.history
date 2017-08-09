@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete 4 elements from project &apos;jse_fa&apos;&#x0D;&#x0A;- Original project: &apos;jse_fa&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     jse_fa/src/cz.unicorncollege.fileman&#x0D;&#x0A;     jse_fa/src/cz.unicorncollege.fileman.commands&#x0D;&#x0A;     jse_fa/src/cz.unicorncollege.fileman.test&#x0D;&#x0A;     config.properties&#x0D;&#x0A;- Delete subpackages" description="Delete elements" element1="src/config.properties" element2="/src&lt;cz.unicorncollege.fileman.test" element3="/src&lt;cz.unicorncollege.fileman.commands" element4="/src&lt;cz.unicorncollege.fileman" element5="/src&lt;cz.unicorncollege" element6="/src&lt;cz" elements="5" flags="589830" id="org.eclipse.jdt.ui.delete" resources="1" stamp="1352298268648" subPackages="true" version="1.0"/>
+</session>

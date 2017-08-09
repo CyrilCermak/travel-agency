@@ -1,0 +1,39 @@
+package cz.ucl.lec03;
+
+public class Primitives {
+	public static void main(String[] argv) {
+		Primitives p = new Primitives();
+		p.m1();
+		p.m2();
+	}
+	
+	public void m1() {
+		Integer a = 5;
+		Integer b = 6;
+		Integer c = a + b;
+		System.out.println(c);
+	}
+	
+	public void m2() {
+		Integer i = 4;
+		Float f = 3.14f;
+		Double d = 2.0;
+
+		System.out.println(i / d);   
+		System.out.println(i / 2);		
+
+		Integer j = (new Double(i / d)).intValue();
+
+		System.out.println(Math.abs(-3.2)); 
+		System.out.println(Math.sin(f));       
+		System.out.println(Math.cos(f));      
+	}
+	
+	public void m3() {
+		int i = 0;
+		while(i <= 7) {
+		  System.out.println(i);
+		  i++;
+		} 
+	}
+}

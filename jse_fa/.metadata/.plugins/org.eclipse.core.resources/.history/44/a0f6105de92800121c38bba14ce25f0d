@@ -1,0 +1,148 @@
+package cz.ucl.fa.ui.model;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Query;
+import javax.swing.table.AbstractTableModel;
+
+import cz.ucl.fa.model.Transportation;
+import cz.ucl.fa.model.util.JPAUtil;
+ 
+public class FilteredTransportationTableModel extends AbstractTableModel {
+	private static final int COLUMN_COUNT = 6;
+
+	private List<Transportation> filteredTransportation;
+	private String filterFrom;
+	private String filterTo;
+	private Date filterDay;
+
+	public int getColumnCount() {
+		return COLUMN_COUNT;
+	}
+
+	public int getRowCount() {
+		return (filteredTransportation != null ? filteredTransportation.size()
+				: 0);
+	}
+
+	public Object getValueAt(int row, int col) {
+		Object result = null;
+		switch (col) {
+		case 0:
+			result = filteredTransportation.get(row).getType();
+			break;
+		case 1:
+			result = getDay(filteredTransportation.get(row).getDeparture());
+			break;
+		case 2:
+			result = getTime(filteredTransportation.get(row).getDeparture());
+			break;
+		case 3:
+			result = filteredTransportation.get(row).getFrom();
+			break;
+		case 4:
+			result = filteredTransportation.get(row).getTo();
+			break;
+		case 5:
+			result = getDuration(
+					filteredTransportation.get(row).getDeparture(),
+					filteredTransportation.get(row).getArrival());
+			break;
+		}
+
+		return result;
+	}
+
+	private String getDay(Date departure) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(departure);
+		return cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH)+1)
+				+ "." + cal.get(Calendar.YEAR);
+	}
+
+	private String getTime(Date departure) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(departure);
+		int hour = cal.get(Calendar.HOUR_OF_DAY);
+		int minute = cal.get(Calendar.MINUTE);
+		return hour + (minute < 10 ? ":0" : ":") + minute;
+	}
+
+	private String getDuration(Date departure, Date arrival) {
+		long durationMillis = arrival.getTime() - departure.getTime();
+		long hours = durationMillis / 3600000;
+		long minutes = (durationMillis % 3600000) / 60000;
+		return hours + (minutes < 10 ? ":0" : ":") + minutes;
+	}
+
+	@Override
+	public String getColumnName(int col) {
+		String result = null;
+		switch (col) {
+		case 0:
+			result = "Type";
+			break;
+		case 1:
+			result = "Date leaving";
+			break;
+		case 2:
+			result = "Time leaving";
+			break;
+		case 3:
+			result = "From";
+			break;
+		case 4:
+			result = "To";
+			break;
+		case 5:
+			result = "Duration";
+			break;
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setFilter(String from, String to, Date day) {
+		if (from != null
+				&& to != null
+				&& (!from.equals(filterFrom) || !to.equals(filterTo) || day != filterDay)) {
+			filterFrom = from;
+			filterTo = to;
+			filterDay = day;
+
+			String qString = "SELECT t FROM Transportation t WHERE t.from = :transFrom AND t.to = :transTo ";
+			if (day != null)
+				qString += " AND t.departure > :dep_from AND t.departure < :dep_to ";
+
+			Query q = JPAUtil.getEntityManager().createQuery(qString);
+			q.setParameter("transFrom", filterFrom);
+			q.setParameter("transTo", filterTo);
+			if (day != null) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(day);
+
+				cal.set(Calendar.HOUR_OF_DAY, 0);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+
+				Date day1 = new Date(cal.getTimeInMillis());
+				q.setParameter("dep_from", day1);
+
+				cal.set(Calendar.DAY_OF_MONTH,
+						cal.get(Calendar.DAY_OF_MONTH) + 1);
+				Date day2 = new Date(cal.getTimeInMillis());
+				q.setParameter("dep_to", day2);
+			}
+			filteredTransportation = q.getResultList();
+			fireTableDataChanged();
+		}
+	}
+
+	public Transportation getTransportation(int index) {
+		return filteredTransportation.get(index);
+	}
+
+}

@@ -1,0 +1,81 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/*
+ * SellTripWizard.java
+ *
+ * Created on 05.11.2008, 05:58:45
+ */
+
+package cz.ucl.fa.ui;
+
+import java.awt.CardLayout;
+
+public class SellTripWizard extends javax.swing.JDialog {
+	private cz.ucl.fa.ui.STPSelectTripType p1SelectTripType;
+    //private cz.ucl.fa.ui.STPSelectPredefinedTrip p2SelectPredefinedTrip;
+    //private cz.ucl.fa.ui.STPCreateCustomTrip p2CreateCustomTrip;
+    //private cz.ucl.fa.ui.STPTripReview p3TripReview;
+    //private cz.ucl.fa.ui.STPCustomerInfo p4CustomerInfo;
+    //private cz.ucl.fa.ui.STPSaleConfirmation p5SaleConfirmation;
+
+    private CardLayout layout;
+
+	/** Creates new form SellTripWizard */
+    public SellTripWizard(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        setTitle("Sell a Trip");
+        initComponents();
+        setLocationRelativeTo(parent);
+    }
+
+    private void initComponents() {
+
+        p1SelectTripType = new cz.ucl.fa.ui.STPSelectTripType(this);
+        //p2SelectPredefinedTrip = new cz.ucl.fa.ui.STPSelectPredefinedTrip(this);
+        //p2CreateCustomTrip = new cz.ucl.fa.ui.STPCreateCustomTrip(this);
+        //p3TripReview = new cz.ucl.fa.ui.STPTripReview(this);
+        //p4CustomerInfo = new cz.ucl.fa.ui.STPCustomerInfo(this);
+        //p5SaleConfirmation = new cz.ucl.fa.ui.STPSaleConfirmation(this);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        layout = new java.awt.CardLayout();
+        getContentPane().setLayout(layout);
+        getContentPane().add(p1SelectTripType, "card1");
+        //getContentPane().add(p2SelectPredefinedTrip, "card2b");
+        //getContentPane().add(p2CreateCustomTrip, "card2a");
+        //getContentPane().add(p3TripReview, "card3");
+        //getContentPane().add(p4CustomerInfo, "card4");
+        //getContentPane().add(p5SaleConfirmation, "card5");
+
+        pack();
+    }
+
+
+    public void panel1Next() {
+    	if(p1SelectTripType.isPredefinedSelected()){
+    		//p2SelectPredefinedTrip.restoreDefaults();
+    		layout.show(getContentPane(),"card2b");
+    	}
+    	else if (p1SelectTripType.isCustomSelected()){
+    		//p2CreateCustomTrip.restoreDefaults();
+    	    layout.show(getContentPane(), "card2a");
+    	}
+    }
+
+    public void panel2Previous() {
+    	layout.show(getContentPane(), "card1");
+    }
+
+	public void cancel() {
+		setVisible(false);
+	}
+
+
+
+
+
+}

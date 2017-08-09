@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="antlr-2.7.7">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Desktop/Libraries/antlr-2.7.7.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/Libraries/dom4j-1.6.1.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/Libraries/hibernate-commons-annotations-4.0.2.Final.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/Libraries/hibernate-core-4.2.5.Final.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/Libraries/hibernate-entitymanager-4.2.5.Final.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/Libraries/hibernate-jpa-2.0-api-1.0.1.Final.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/Libraries/javassist-3.15.0-GA.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/Libraries/jboss-logging-3.1.0.GA.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/Libraries/jboss-transaction-api_1.1_spec-1.0.1.Final.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/Libraries/mysql-connector-java-5.1.26-bin.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,137 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/*
+ * TripListDialog.java
+ *
+ * Created on 05.11.2008, 16:59:09
+ */
+
+package cz.ucl.fa.ui;
+ 
+import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import cz.ucl.fa.model.Holiday;
+import cz.ucl.fa.ui.model.TripTableModel;
+
+/**
+ * 
+ * @author Martin
+ */
+public class TripListDialog extends javax.swing.JDialog {
+	private EditHolidayDialog dEditTrip;
+	private javax.swing.JButton btClose;
+	private javax.swing.JButton btEditSelected;
+
+	private TripListDialog dialog;
+	private JButton btCreateNew;
+	private JButton btRemoveSelected;
+	private JPanel buttonPanel;
+	private javax.swing.JScrollPane spTripList;
+	private javax.swing.JTable tblTrips;
+	private TripTableModel tripListModel;
+
+	private Holiday selectedTrip;
+
+	/** Creates new form TripListDialog */
+	public TripListDialog(java.awt.Frame parent, boolean modal) {
+		super(parent, modal);
+		setTitle("Pre-defined trips");
+		dialog = this;
+		setLocationRelativeTo(parent);
+		initComponents();
+	}
+
+	private void initComponents() {
+		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+		setLayout(new BorderLayout());
+
+		buttonPanel = new JPanel();
+
+		btCreateNew = new JButton();
+		btCreateNew.setText("Create");
+		btCreateNew.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				dEditTrip = new EditHolidayDialog(dialog);
+				dEditTrip.setVisible(true);
+			}
+		});
+		buttonPanel.add(btCreateNew);
+
+		btEditSelected = new javax.swing.JButton();
+		btEditSelected.setText("Edit selected");
+		btEditSelected.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				dEditTrip = new EditHolidayDialog(dialog, selectedTrip);
+				dEditTrip.setVisible(true);
+			}
+
+		});
+		btEditSelected.setEnabled(false);
+		buttonPanel.add(btEditSelected);
+
+		btRemoveSelected = new JButton();
+		btRemoveSelected.setText("Remove selected");
+		btRemoveSelected.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				removeSelected();
+			}
+		});
+		btRemoveSelected.setEnabled(false);
+		buttonPanel.add(btRemoveSelected);
+
+		btClose = new javax.swing.JButton();
+		btClose.setText("Close");
+		btClose.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				dialog.setVisible(false);
+			}
+		});
+		buttonPanel.add(btClose);
+
+		tblTrips = new javax.swing.JTable();
+		tripListModel = new TripTableModel();
+		tblTrips.setModel(tripListModel);
+		tblTrips.getSelectionModel().setSelectionMode(
+				ListSelectionModel.SINGLE_SELECTION);
+		tblTrips.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+
+					public void valueChanged(ListSelectionEvent e) {
+						selectedTrip = tripListModel.getTrip(e.getFirstIndex());
+
+						btRemoveSelected.setEnabled(selectedTrip != null);
+						btEditSelected.setEnabled(selectedTrip != null);
+					}
+
+				});
+		spTripList = new javax.swing.JScrollPane(tblTrips);
+
+		this.getContentPane().add(spTripList, BorderLayout.CENTER);
+		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+
+		pack();
+	}
+
+	protected void removeSelected() {
+		if (JOptionPane.showConfirmDialog(this, "Really delete?",
+				"Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+			tripListModel.removeTrip(selectedTrip);
+		}
+	}
+
+	public void refreshTrips() {
+		tripListModel.refreshTrips();
+	}
+
+}

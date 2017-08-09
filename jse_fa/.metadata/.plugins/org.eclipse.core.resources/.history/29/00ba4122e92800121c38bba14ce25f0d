@@ -1,0 +1,254 @@
+package cz.ucl.fa.ui;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Query;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import cz.ucl.fa.model.Transportation;
+import cz.ucl.fa.model.util.JPAUtil;
+import cz.ucl.fa.ui.model.FilteredTransportationTableModel;
+
+
+public class SelectTransportationDialog extends javax.swing.JDialog {
+	private FilteredTransportationTableModel transportationTableModel;
+	private boolean wasCancelled = false;
+	 
+	private javax.swing.JButton btCancel;
+	private javax.swing.JButton btChoose;
+    private javax.swing.JButton btFind;
+    
+    private javax.swing.JComboBox cbFrom;
+    private javax.swing.JComboBox cbTo;
+    private javax.swing.JTextField tfWhen;
+    
+    private javax.swing.JLabel lblLeaving;
+    private javax.swing.JLabel lblFrom;
+    private javax.swing.JLabel lblTo;
+    
+    private javax.swing.JScrollPane spTransportation;
+    private javax.swing.JTable transportationTable;    
+    
+
+    public SelectTransportationDialog(JDialog parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
+    }
+
+    private void initComponents() {
+    	setTitle("Select transportation");
+        setLayout(new GridBagLayout());
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        
+        btChoose = new javax.swing.JButton();
+        btChoose.setText("Choose selected");
+        btChoose.setEnabled(false);
+        btChoose.addActionListener(new java.awt.event.ActionListener() {
+        	public void actionPerformed(java.awt.event.ActionEvent e) {
+        		wasCancelled=false;
+        		setVisible(false);
+        	}
+        });
+        
+        btCancel = new javax.swing.JButton();
+        btCancel.setText("Cancel");
+        btCancel.addActionListener(new java.awt.event.ActionListener() {
+        	public void actionPerformed(java.awt.event.ActionEvent e) {
+        		wasCancelled=true;
+        		setVisible(false);
+        	}
+        });
+                
+        btFind = new javax.swing.JButton();
+        btFind.setText("Find");
+        btFind.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				String dayString = tfWhen.getText();
+				Date day = null;
+				if(dayString!=null && !"".equals(dayString.trim())) {
+					SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+					try {
+						day = sdf.parse(dayString);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}
+			transportationTableModel.setFilter((String)cbFrom.getSelectedItem(), (String)cbTo.getSelectedItem(),day);
+			}
+		});
+        
+        transportationTable = new JTable();
+        transportationTableModel = new FilteredTransportationTableModel();
+        transportationTable.setModel(transportationTableModel);
+        transportationTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);        
+        transportationTable.setModel(transportationTableModel);
+        transportationTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+					if (transportationTable.getSelectedRow()>=0) {
+						btChoose.setEnabled(true);
+					} else {
+						btChoose.setEnabled(false);
+					}
+				}
+				
+			}
+		}); 
+        spTransportation = new javax.swing.JScrollPane(transportationTable);
+
+        lblLeaving = new javax.swing.JLabel();
+        lblLeaving.setText("Date leaving:");
+        
+        lblFrom = new javax.swing.JLabel();
+        lblFrom.setText("From:");
+        
+        lblTo = new javax.swing.JLabel();
+        lblTo.setText("To:");
+        
+        cbFrom = new javax.swing.JComboBox();
+        cbFrom.setModel(new javax.swing.DefaultComboBoxModel(getAllFromLocations()));
+        
+        cbTo = new javax.swing.JComboBox();
+        cbTo.setModel(new javax.swing.DefaultComboBoxModel(getAllToLocations()));
+        
+        tfWhen = new javax.swing.JTextField();
+        tfWhen.setText("");        
+        
+GridBagConstraints c;
+        
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets = new Insets(7,7,7,7);
+        add(lblFrom,c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridwidth = 2;
+        c.gridy = 0;        
+        c.insets = new Insets(7,7,7,7);        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        add(cbFrom,c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.insets = new Insets(7,7,7,7);
+        add(lblTo,c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridwidth = 2;
+        c.gridy = 1;       
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(7,7,7,7);
+        add(cbTo,c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 2;
+        c.insets = new Insets(7,7,7,7);
+        add(lblLeaving,c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 2;
+        c.insets = new Insets(7,7,7,7);
+        c.weightx = 0.1;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        add(tfWhen,c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 2;
+        c.insets = new Insets(7,7,7,7);        
+        c.weightx = 0.3;        
+        add(new JPanel(),c);        
+                
+        c = new GridBagConstraints();
+        c.gridx = 3;
+        c.gridy = 2;
+        c.insets = new Insets(7,7,7,7);
+        add(btFind,c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridwidth = 4;
+        c.gridy = 3;
+        c.insets = new Insets(7,7,7,7);
+        c.weighty = 0.5;
+        c.fill = GridBagConstraints.BOTH;
+        add(spTransportation,c);
+        
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(btChoose);
+        buttonPanel.add(btCancel);
+        
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 4;
+        c.gridwidth = 4;
+        c.anchor = GridBagConstraints.SOUTHEAST;
+        c.insets = new Insets(7,7,7,7);
+        add(buttonPanel,c);
+
+        pack();
+    }
+
+    public static void main(String[] argv) {
+		SwingUtilities.invokeLater(new Runnable() {
+
+			public void run() {
+				SelectTransportationDialog instance = new SelectTransportationDialog(null,true);
+				instance.setVisible(true);
+				if(!instance.wasCancelled()) System.out.println("Selected transportation: " + instance.getSelectedTransportation());
+				System.exit(0);
+			}
+
+		});
+	}
+    
+    @SuppressWarnings("unchecked")
+	private Object[] getAllFromLocations() {
+		Query q = JPAUtil.getEntityManager().createQuery(
+				"SELECT DISTINCT t.from FROM Transportation t");
+		List<String> allLocations = (List<String>) q.getResultList();
+		String[] result = new String[allLocations.size()];
+		for(int i = 0; i< allLocations.size(); i++) result[i] = allLocations.get(i);
+
+		return result;
+	}
+    
+    @SuppressWarnings("unchecked")
+	private Object[] getAllToLocations() {
+		Query q = JPAUtil.getEntityManager().createQuery(
+				"SELECT DISTINCT t.from FROM Transportation t");
+		List<String> allLocations = (List<String>) q.getResultList();
+		String[] result = new String[allLocations.size()];
+		for(int i = 0; i< allLocations.size(); i++) result[i] = allLocations.get(i);
+
+		return result;
+	}
+
+	protected boolean wasCancelled() {
+		return wasCancelled;
+	}
+
+	protected Transportation getSelectedTransportation() {
+		return transportationTableModel.getTransportation(transportationTable.getSelectedRow());
+	}
+}

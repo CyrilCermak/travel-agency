@@ -1,0 +1,5 @@
+package cz.ucl.fa.model;
+
+public class Holiday {
+	//Just fake - you are supposed to implement it
+}
