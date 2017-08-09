@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="javadoc">
-    <target name="javadoc">
-        <javadoc access="public" additionalparam=" -encoding utf-8 -charset utf-8" author="true" classpath="C:\ucl\software\jse\hibernate\lib\required\antlr-2.7.7.jar;C:\ucl\software\jse\hibernate\lib\jpa\hibernate-entitymanager-4.1.7.Final.jar;C:\ucl\software\jse\mysql-connector-java\mysql-connector-java-5.1.22-bin.jar;C:\ucl\software\jse\hibernate\lib\required\javassist-3.15.0-GA.jar;C:\ucl\software\jse\hibernate\lib\required\dom4j-1.6.1.jar;C:\ucl\software\jse\hibernate\lib\required\hibernate-jpa-2.0-api-1.0.1.Final.jar;C:\ucl\software\jse\hibernate\lib\required\jboss-transaction-api_1.1_spec-1.0.0.Final.jar;C:\ucl\software\jse\hibernate\lib\required\jboss-logging-3.1.0.GA.jar;C:\ucl\software\jse\hibernate\lib\required\hibernate-core-4.1.7.Final.jar;C:\ucl\software\jse\hibernate\lib\required\hibernate-commons-annotations-4.0.1.Final.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="cz.ucl.fa.model,cz.ucl.fa.ui,cz.ucl.fa.model.util,cz.ucl.fa.model.types,cz.ucl.fa.ui.model" source="1.7" sourcepath="src" splitindex="true" use="true" version="true"/>
-    </target>
-</project>
